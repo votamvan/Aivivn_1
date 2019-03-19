@@ -1,0 +1,63 @@
+# -*- coding: utf-8 -*-
+# download data + embeded
+!pip install -U -q PyDrive
+
+# Download from Google Drive as name $name to the current folder
+def download(id, name):
+  downloaded = drive.CreateFile({'id': id})
+  downloaded.GetContentFile(name)
+
+# Setup drive
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from google.colab import auth
+from oauth2client.client import GoogleCredentials
+# Authenticate and create the PyDrive client.
+# This only needs to be done once per notebook.
+auth.authenticate_user()
+gauth = GoogleAuth()
+gauth.credentials = GoogleCredentials.get_application_default()
+drive = GoogleDrive(gauth)
+
+# Download word2vecvn
+import os
+os.chdir('/content/Aivivn_1/embeddings')
+if not os.path.isfile('baomoi.model.bin'):
+  download('0B1GKSX6YCHXlMTVZNkFEYzRyd1E', 'baomoi.model.bin')
+
+
+# Download train.crash test.crash
+os.chdir('/content/Aivivn_1/data')
+download('1881plJMdiP3s3mjWusYuaj0bUvSf0UKi', 'test.crash')
+download('1HKgANA7IyqB6ECIg4mxrC-UMr2z1oT2E', 'train.crash')
+
+# Download fasttext
+import os
+os.chdir('/content/Aivivn_1/embeddings')
+fastai_wiki_link = 'https://dl.fbaipublicfiles.com/fasttext/vectors-wiki/wiki.vi.vec'
+if not os.path.isfile('wiki.vi.vec'):
+  !wget $fastai_wiki_link
+fast_ai_link = 'https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.vi.300.bin.gz'
+if not os.path.isfile('cc.vi.300.bin'):
+  !wget $fast_ai_link
+  !gunzip cc.vi.300.bin.gz
+
+Sample run command:
+!python -m main -m VDCNN -e ./embeddings/baomoi.model.bin --max 40000 --mix --prob
+
+-----
+!python -m main_elmo -m RNNKeras -e ./embeddings/ --find_threshold --add_embed
+!python -m main_elmo -m SARNNKeras -e /content/Aivivn_1/embeddings/ --find_threshold --add_embed
+
+!python -m main -m TextCNN -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob
+!python -m main -m VDCNN -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob
+!python -m main -m RNNKeras -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob --add_embed --fix_embed --aug -1 --use_sim_dict
+!python -m main -m SARNNKeras -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob --add_embed
+!python -m main -m SARNNKeras -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob --add_embed --fix_embed --aug -1 --use_sim_dict
+!python -m main -m SARNNKeras -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob --aug -2
+!python -m main -m LSTMKeras -e ./embeddings/wiki.vi.vec
+
+!python -m main_hierarchical -m HARNN -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob
+!python -m main_hierarchical -m HARNN -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob --add_embed --fix_embed --aug -1 --aug_min_len 3
+!python -m main_hierarchical -m OriginalHARNN -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob
+!python -m main_stack_hier -e ./embeddings/baomoi.model.bin --max 40000 --mix
