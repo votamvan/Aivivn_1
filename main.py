@@ -99,8 +99,8 @@ def train_model(
     )
     early = EarlyStopping(monitor='val_f1', mode='max', patience=5)
     callbacks_list = [checkpoint, early]
-    #batch_size = 16
-    batch_size = 512
+    batch_size = 16
+    # batch_size = 512
     epochs = 100
 
     model = model(
