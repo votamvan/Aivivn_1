@@ -198,7 +198,7 @@ class StackedGeneralizerWithHier:
                 pred[test_index] = model.predict(X_test).reshape(-1)
 
                 # Reset model:
-                model = model.set_weights(weights)
+                model.set_weights(weights)
                 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', f1])
 
             meta_input[:, len(self._models) + ind] = pred
