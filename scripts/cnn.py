@@ -56,6 +56,7 @@ def TextCNN(embeddingMatrix = None, embed_size = 400, max_features = 20000, maxl
 
     model = Model(inputs = inp, outputs = op)
     model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics = ['accuracy', f1])
+    print(model.summary())
     return model
 
 
