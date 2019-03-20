@@ -193,7 +193,7 @@ class StackedGeneralizerWithHier:
                     epochs=epochs,
                     batch_size=batch_size
                 )
-
+                print(model_path)
                 model.load_weights(filepath='{}/models.hdf5'.format(model_path))
                 pred[test_index] = model.predict(X_test).reshape(-1)
 

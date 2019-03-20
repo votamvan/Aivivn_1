@@ -61,3 +61,6 @@ Sample run command:
 !python -m main_hierarchical -m HARNN -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob --add_embed --fix_embed --aug -1 --aug_min_len 3
 !python -m main_hierarchical -m OriginalHARNN -e ./embeddings/baomoi.model.bin --max 40000 --find_threshold --mix --prob
 !python -m main_stack_hier -e ./embeddings/baomoi.model.bin --max 40000 --mix
+
+-------------------------
+python -m main -m VDCNN -e ./embeddings/baomoi.model.bin --max 40000 --mix --prob
