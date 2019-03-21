@@ -74,6 +74,15 @@ def make_embedding(texts, embedding_path, max_features):
     if embedding_path.endswith('.vec'):
         embedding_index = dict(get_coefs(*o.strip().split(" "))
                                for o in open(embedding_path))
+        #----- start fix bug -----#
+        wrong_keys = []
+        for key, value in embedding_index.items():
+            if len(value) == 299:
+                wrong_keys.append(key)
+        for key in wrong_keys:
+            print("wrong key", key)
+            del embedding_index[key]
+        #----- end fix bug -----#
         mean_embedding = np.mean(np.array(list(embedding_index.values())))
     elif embedding_path.endswith('bin'):
         embedding_index = KeyedVectors.load_word2vec_format(
