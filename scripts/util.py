@@ -77,7 +77,7 @@ def make_embedding(texts, embedding_path, max_features):
         #----- start fix bug -----#
         wrong_keys = []
         for key, value in embedding_index.items():
-            if len(value) == 299:
+            if len(value) != 300:
                 wrong_keys.append(key)
         for key in wrong_keys:
             print("wrong key", key)
